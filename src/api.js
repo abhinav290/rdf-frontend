@@ -1,9 +1,9 @@
 
-const API = '/api'
+const API = '/tourism/query'
 
 const api = {
-    sign_up: '/sample',
-    search: API + '/search/',
+    sample: API + '/sample',
+    execute: API + '/execute',
 }
 
 export default api

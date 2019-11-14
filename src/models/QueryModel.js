@@ -6,14 +6,25 @@ class QueryModel {
     queryOutput ={}
     
     @action 
-    loadOutput = async () => {
-         const data = await ApiService.sample_output ()
-         this.queryOutput = JSON.parse(JSON.stringify(data))
-         console.log('Update' + JSON.stringify(this.queryOutput))
+    loadOutput = async (callback) => {
+        const data = await ApiService.sample_output ()
+        this.queryOutput = JSON.parse(JSON.stringify(data))
+        callback(this.queryOutput)
     }
     @action
     getOutput = () => {
         return this.queryOutput
+    }
+    @action
+    executeQuery = async(query, callback) => {
+        const response = await ApiService.executeQuery({query})
+        
+        if(response.ok) {
+            this.queryOutput = JSON.parse(JSON.stringify(response.data))
+            callback.success(this.queryOutput)
+        } else {
+            callback.failure(this.queryOutput)
+        }
     }
 }
 
