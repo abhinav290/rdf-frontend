@@ -5,16 +5,11 @@ class QueryModel {
     @observable 
     queryOutput ={}
     
-    @action 
-    loadOutput = async (callback) => {
-        const data = await ApiService.sample_output ()
-        this.queryOutput = JSON.parse(JSON.stringify(data))
-        callback(this.queryOutput)
-    }
     @action
     getOutput = () => {
         return this.queryOutput
     }
+ 
     @action
     setOutput = (output) => {
         this.queryOutput = output
@@ -22,6 +17,7 @@ class QueryModel {
 
     @action
     executeQuery = async(query, callback) => {
+        console.log('Query' + query)
         const response = await ApiService.executeQuery({query})
         if(response.ok) {
             this.setOutput(response.data)

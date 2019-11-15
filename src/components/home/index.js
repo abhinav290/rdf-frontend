@@ -4,10 +4,9 @@ import { Drawer, AppBar, Typography, CssBaseline, Toolbar, List, ListItem, ListI
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { observer, inject } from 'mobx-react'
-import ApiService from '../../services/ApiService';
 import Output from './../Output'
-import Yasgui from './../Yasgui'
-
+import EditableQueryComponent from './../EditableQueryComponent'
+import {QUERIES, PROJECT_NAME} from './../../consts'
 
 const useStyles = (theme) => ({
   menuButton: {
@@ -37,57 +36,61 @@ const useStyles = (theme) => ({
 @inject('queryModel')
 @observer
 class Home extends React.Component {
-
-
-  state = {
-    indexSelected: 0
-  }
-
-handleItemClick = async (index) => {
-  const data = ApiService.sample_output()
-  this.setState({indexSelected: index, response: data})
-}
-
-  render_list_items = () => {
-    return( ['Editable','Query 1', 'Query 2', 'Query 3', 'Query 4'].map((text, index) => (
-      <ListItem button key={text} onClick={() => this.handleItemClick(index)} selected={(this.state.indexSelected === index)}>
-        <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-        <ListItemText primary={text} />
-      </ListItem>
-    )))
-  } 
   
-  render = () => {
-    const { classes } = this.props;
+  
+  state = {
+    indexSelected: 0,
+  }
+  
+  handleItemClick = async (index) => {
+    this.setState({indexSelected: index})
+  }
+  
+  render_list_items = () => {
+    
+    return(
+     Object.keys(QUERIES).map((key, index) => (
+        <ListItem button key={key} onClick={() => this.handleItemClick(index)} 
+        selected={(this.state.indexSelected === key)}>
+        <ListItemIcon>
+        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+        </ListItemIcon>
+        <ListItemText primary={QUERIES[key].displayTitle} />
+        </ListItem>
+        )))
+      } 
+      
+      render = () => {
+        const { classes } = this.props;
         return (
-             <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar} >
-        <Toolbar>
+          <div className={classes.root}>
+          <CssBaseline />
+          <AppBar position="fixed" className={classes.appBar} >
+          <Toolbar>
           <Typography variant="h6" noWrap>
-            KDE
+          {PROJECT_NAME}
           </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        anchor="left"
-      >
-        <div className={classes.toolbar} />
-        <List>
+          </Toolbar>
+          </AppBar>
+          <Drawer
+          variant="permanent"
+          anchor="left"
+          >
+          <div className={classes.toolbar} />
+          <List>
           {this.render_list_items()}
-        </List>
-      </Drawer>
-      <Container fixed>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
-        {this.state.indexSelected === 0 && <Yasgui/>}
-        {this.state.indexSelected !==0 && <Output response={this.state.response}/>}
-        </main>
-        </Container>
-        </div>
-        )    
+          </List>
+          </Drawer>
+          <Container fixed>
+          <main className={classes.content}>
+          <div className={classes.toolbar} />
+          {this.state.indexSelected === 0 && <EditableQueryComponent index={this.state.indexSelected}/>}
+          {this.state.indexSelected !==0 && <Output index={this.state.indexSelected} {...QUERIES[this.state.indexSelected]}/>}
+          </main>
+          </Container>
+          </div>
+          )    
         }
-}
-
-export default withStyles(useStyles)(Home);
+      }
+      
+      export default withStyles(useStyles)(Home);
