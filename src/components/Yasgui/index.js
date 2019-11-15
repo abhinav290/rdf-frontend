@@ -1,9 +1,9 @@
 import React from 'react'
-import { Paper, Button } from '@material-ui/core'
+import { Dialog,DialogActions, DialogContent, DialogContentText, DialogTitle, Paper, Button } from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import MaterialTable from 'material-table'
 import { inject } from 'mobx-react'
-
+import {process_json, process_json_data} from './../../utils'
 
 const styles = (theme) => ({
     button: {
@@ -17,29 +17,34 @@ const styles = (theme) => ({
         marginLeft: '5%' 
     }
   })
+
   @inject('queryModel')
   class YasguiComponent extends React.Component {
     state={
         query:'',
         output: false,
-        buttonDisabled: false
+        buttonDisabled: false,
+        open: false
     }
 
     showOutput = (response) => {
-      console.log('Response' + JSON.stringify(response))
       this.setState({buttonDisabled: false,
         response,
         output: true
     })
   }
   alertUser = () => {
-    alert('Invalid query')
     this.setState({
-      buttonDisabled:false
+      open: true
+    })
+  }
+  enableButton = () => {
+    this.setState({
+      buttonDisabled:false,
+      open:false
     })
   }
     handleOnClick = () => {
-        console.log(this.state.query)
         this.setState({buttonDisabled: true,
           output:false,
           response: null
@@ -65,32 +70,44 @@ const styles = (theme) => ({
         </Paper>
         <br/>
         {this.state.output && this.renderResponse()}
+        {this.renderAlert()}
         </div>
         )
     }
 
-renderResponse = () =>{
+  renderResponse = () =>{
+    const {response} = this.state
+    const columns = process_json(response)
+    const data = process_json_data(response)
     return(
     <MaterialTable
-    columns={[
-      { field: "name" },
-      { title: "Last Name", field: "surname" },
-      { title: "Year", field: "birthYear", type: "numeric" },
-      {
-        title: "City",
-        field: "birthCity",
-        lookup: {63: "ABC", 65: "DEF"}
-      }
-    ]}
-    data={[
-      { name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 63 },
-      { name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 63 },
-      { name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 65 }
-    ]}
+    columns={columns}
+    data={data}
     title="Results"
     options={{headerStyle: {backgroundColor: '#039be5',}}}
     />
     )
+}
+
+renderAlert = () => {
+  return (<Dialog
+  open={this.state.open}
+  onClose={this.enableButton}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+  >
+  <DialogTitle id="alert-dialog-title">{"Issue occured"}</DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+      A problem occured while executing the query.
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={this.enableButton} color="primary" autoFocus>
+      OK
+    </Button>
+  </DialogActions>
+</Dialog>)
 }
 }
 export default withStyles(styles)(YasguiComponent)

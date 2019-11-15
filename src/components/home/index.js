@@ -58,7 +58,6 @@ handleItemClick = async (index) => {
   } 
   
   render = () => {
-    console.log('Home render ' + this.state.response)
     const { classes } = this.props;
         return (
              <div className={classes.root}>

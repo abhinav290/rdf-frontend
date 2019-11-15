@@ -19,7 +19,6 @@ class ApiSerice {
           payload.body = JSON.stringify(params)
       }
       const res = await fetch(`${this.api_url}${url}`, payload)
-      console.log(res)
       const status = res.status
       const ok = res.ok
       const body = await res.json()

@@ -6,7 +6,6 @@ import {inject} from 'mobx-react'
 @inject('queryModel')
 export default class Output extends React.Component {
 render = () => {
-    console.log('Output render')
     const text = this.props.queryModel.getOutput()
     return(<div>
         <Paper>
