@@ -37,28 +37,39 @@ export default class Output extends React.Component {
   
   render = () => {
     return(
-      <div style={{marginLeft: '10%'}}>
+      <div>
       <Paper>
-        <Typography variant="h5">
+        <br/>
+      <Typography variant="h4" style={{marginLeft:"2%"}}>
       {this.props.question}
       </Typography>
+      <br/>      
+      <div class="content">
+      <div class="typo-line">
+      <p class="category" style={{marginLeft:"2%"}}>Query</p>
+      <blockquote>
+      <p>
+      {this.props.query}        
+      </p>
+      </blockquote>
+      </div>
       <br/>
-      </Paper>
-      <br/><br/>
-      <Paper>
-        <Typography variant="h6">Query:</Typography>
-      {this.props.query}
-      <br/>
-      <br/>
-      </Paper>
-      <br/> <br/>
+      <div class="typo-line">
+      <p class="category" style={{marginLeft:"2%"}}>Output</p>
+      <blockquote>
+      <p>
       {this.state.output && this.renderResponse()}
+      </p>
+      </blockquote>
+      </div>
+      <br/>
+      </div>
+      </Paper>
       </div>
       )
     }
     
     renderResponse = () =>{
-      console.log('Table updated')
       const {response} = this.state
       const columns = process_json(response)
       const data = process_json_data(response)      
@@ -68,7 +79,7 @@ export default class Output extends React.Component {
         columns={columns}
         data={data}
         title="Results"
-        options={{headerStyle: {backgroundColor: '#039be5',}}}
+        options={{headerStyle: {backgroundColor: '#039be5'}}}
         />
         )
       }

@@ -1,12 +1,12 @@
 import api from '../api'
-
+import {API_URL} from './../consts'
 
 /**
  * Service to abstract api calls to one file - to be used in middleware
  */
 class ApiSerice {
   constructor() {
-      this.api_url = 'https://opendata-backend.herokuapp.com'
+      this.api_url = API_URL
   }
 
    async apiCall(url, method = 'GET', params = null) {

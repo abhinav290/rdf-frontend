@@ -9,7 +9,7 @@ import _ from 'lodash'
 const styles = (theme) => ({
   button: {
     margin: theme.spacing(1),
-    marginRight: '5%',
+    marginRight: '80%',
     float: 'right'
   },
   textarea: {
@@ -81,7 +81,7 @@ class EditableQueryComponent extends React.Component {
       </Grid>
       
       <Grid item>
-      <Button variant="contained" color="primary" className={classes.button} disabled={this.state.buttonDisabled} value={this.state.query} onClick={this.handleOnClick}>
+      <Button variant="contained" color="primary" className={classes.button} disabled={this.state.buttonDisabled} onClick={this.handleOnClick}>
       Execute
       </Button>
       </Grid>
