@@ -38,18 +38,20 @@ export default class Output extends React.Component {
   render = () => {
     return(
       <div>
-      <Paper>
-        <br/>
       <Typography variant="h4" style={{marginLeft:"2%"}}>
       {this.props.question}
       </Typography>
+      <br/>
+      <Paper>
       <br/>      
       <div class="content">
       <div class="typo-line">
       <p class="category" style={{marginLeft:"2%"}}>Query</p>
       <blockquote>
       <p>
-      {this.props.query}        
+      <code>
+        {this.props.query}        
+      </code>
       </p>
       </blockquote>
       </div>

@@ -1,24 +1,24 @@
 export const API_URL="https://opendata-backend.herokuapp.com"
 export const PROJECT_NAME="Tourism Open Data"
 export const KEYS= {
-    CITY: "city",
-    COUNTRY: "country",
-    ACTIVITY: "activity",
-    ATTRACTION: "attraction",
-    ACCOMMODATION:"accommodation",
-    TRAIL:"trail",
+    CITY: "City",
+    COUNTRY: "Country",
+    ACTIVITY: "Activity",
+    ATTRACTION: "Attraction",
+    ACCOMMODATION:"Accommodation",
+    TRAIL:"Trail",
 
 }
 export const PREFIXES = {
-    CSV: '<http://example.org/csv/>'
+    TOURISM: '<http://www.example.org/tourism/>'
 }
 export const QUERY_MAP = {
-    "city":`PREFIX csv: ${PREFIXES.CSV} SELECT DISTINCT ?value ?name WHERE {?id a ?obj . ?value csv:cityName ?name. FILTER (?obj = csv:City)}`,
-    "country":`PREFIX csv: ${PREFIXES.CSV} SELECT DISTINCT ?value ?name WHERE {?id a ?obj . ?value csv:countryName ?name. FILTER (?obj = csv:Country)}`,
-    "activity":`PREFIX csv: ${PREFIXES.CSV} SELECT DISTINCT ?value ?name WHERE {?value a ?obj . ?value csv:name ?name. FILTER (?obj = csv:ActivityPlace)}`,
-    "attraction": `PREFIX csv: csv: ${PREFIXES.CSV} SELECT DISTINCT ?value ?name WHERE {?value a ?obj . ?value csv:name ?name. FILTER (?obj = csv:Attraction)}`,
-    "accommodation": `PREFIX csv: ${PREFIXES.CSV} SELECT DISTINCT ?value ?name WHERE {?value a ?obj . ?value csv:name ?name. FILTER (?obj = csv:Accommodation)}`,
-    "trail":`PREFIX csv: ${PREFIXES.CSV} SELECT DISTINCT ?value ?name WHERE {?value a ?obj . ?value csv:trailName ?name. FILTER (?obj = csv:Trail)}`,
+    "City":`PREFIX tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?id a ?obj . ?value tourism:countyName ?name. FILTER (?obj = tourism:County)}`,
+    "Country":`PREFIX tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?id a ?obj . ?value tourism:countryName ?name. FILTER (?obj = tourism:Country)}`,
+    "Activity":`PREFIX tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?value a ?obj . ?value tourism:name ?placeName. FILTER (?obj = tourism:ActivityPlace)}`,
+    "Attraction": `PREFIX tourism: tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?value a ?obj . ?value tourism:placeName ?name. FILTER (?obj = tourism:Attraction)}`,
+    "Accommodation": `PREFIX tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?value a ?obj . ?value tourism:placeName ?name. FILTER (?obj = tourism:Accommodation)}`,
+    "Trail":`PREFIX tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?value a ?obj . ?value tourism:trailName ?name. FILTER (?obj = tourism:Trail)}`,
 }
 
 export const QUERIES = {
@@ -30,17 +30,31 @@ export const QUERIES = {
     },
     1: {
         icon:"pe-7s-news-paper",
-        question: "Display all instances of all classes.",
+        question: "List details of all the places that provide activities in the same county as the selected trail.",
         displayTitle: "Query 1",
-        query: (value) => {return `PREFIX csv:${PREFIXES.CSV} select ?x ?y where {?x a ?y. FILTER(?x = <${value}>)}`},
-        dataKey:KEYS.CITY,
-        placeholder: 'Please select the city.'
+        query: (value) => {return `PREFIX tourism: ${PREFIXES.TOURISM}
+            SELECT ?ActivityName ?URL ?Contact_No
+            WHERE {
+                ?trail 		    a 						    tourism:Trail;
+                                tourism:trailCounty 		?TrailCounty.
+                ?ActivityPlace	a 						    tourism:ActivityPlace;
+                                tourism:placeName 			?ActivityName;
+                                tourism:placeTelephone		?Contact_No;
+                                tourism:url					?URL;
+                                tourism:placeAddress		?Address.
+                ?Address	    tourism:county				?ActivityCounty.
+                FILTER(sameTerm(?trail,<${value}>))
+                FILTER(sameTerm(?ActivityCounty,?TrailCounty))
+               }`
+            },
+        dataKey:KEYS.TRAIL,
+        placeholder: 'Please select the Trail.'
     },
     2: {
         icon:"pe-7s-news-paper",
         question: "Display all instances of all classes.",
         displayTitle: "Query 2",
-        query: (value) => {return `PREFIX csv:${PREFIXES.CSV} select ?x ?y where {?x a ?y. FILTER(?x = <${value}>)}`},
+        query: (value) => {return `PREFIX tourism:${PREFIXES.TOURISM} select ?x ?y where {?x a ?y. FILTER(?x = <${value}>)}`},
         dataKey:KEYS.COUNTRY,
         placeholder: 'Please select the country.'
     },
@@ -48,7 +62,7 @@ export const QUERIES = {
         icon:"pe-7s-news-paper",
         question: "Display all instances of all classes.",
         displayTitle: "Query 3",
-        query: (value) => {return `PREFIX csv:${PREFIXES.CSV} select ?x ?y where {?x a ?y. FILTER(?x = <${value}>)}`},
+        query: (value) => {return `PREFIX tourism:${PREFIXES.TOURISM} select ?x ?y where {?x a ?y. FILTER(?x = <${value}>)}`},
         dataKey:KEYS.ACCOMMODATION,
         placeholder: 'Please select the accomodation.'
     },
@@ -74,7 +88,7 @@ export const QUERIES = {
         icon:"pe-7s-news-paper",
         question: "Display all instances of all classes.",
         displayTitle: "Query 7",
-        query: `PREFIX csv: ${PREFIXES.CSV} select ?name ?city where {?x csv:name ?name. ?x csv:hasAddress?y. ?y csv:inCity ?z. ?z csv:cityName ?city}`,
+        query: `PREFIX tourism: ${PREFIXES.TOURISM} select ?name ?city where {?x tourism:name ?name. ?x tourism:hasAddress?y. ?y tourism:inCity ?z. ?z tourism:cityName ?city}`,
     },    
     8: {
         icon:"pe-7s-news-paper",

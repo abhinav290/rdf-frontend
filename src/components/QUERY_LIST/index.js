@@ -14,10 +14,10 @@ export default class Output extends React.Component {
     response: null,
     showDropdown: false,
     dropDownResults: [],
-    query:'',
+    query: null,
     selectedValue: '',
   }
-
+  
   showDropdown = (response) => {
     this.setState({
       showDropdown: true,
@@ -52,26 +52,37 @@ export default class Output extends React.Component {
     const options = this.props.queryModel.dataStore[this.props.dataKey]
     return(
       <div>
-      <Paper style={{height:'75%', width: '100%',}}>
-      <br/>
       <Typography variant="h4" style={{marginLeft:"2%"}}>
       {this.props.question}
       </Typography>
+      <br/>
+      <Paper style={{height:'75%', width: '100%',}}>
+      <br/>
+      <div class="content">
+      <div class="typo-line">
+      <p class="category" style={{marginLeft:"2%"}}>{this.props.dataKey}</p>
+      <blockquote>
+      <p>
       <SearchSelect options={options} placeholder={this.props.placeholder} selectedValue= {this.state.selectedValue} onChange={this.executeQuery} />
+      </p>
+      </blockquote>
+      </div>
+      </div>
       <br/>  
       {this.renderQueryPage()}
       </Paper>
       </div>
-    )
-  }
-  renderQueryPage = ()=> {
-    return(
+      )
+    }
+    renderQueryPage = ()=> {
+      return(
         <div class="content">
         <div class="typo-line">
         <p class="category" style={{marginLeft:"2%"}}>Query</p>
         <blockquote>
         <p>
-        {this.state.query}        
+        <code>{this.state.query}
+        </code>
         </p>
         </blockquote>
         </div>
@@ -86,10 +97,10 @@ export default class Output extends React.Component {
         </div>
         <br/>
         </div>
-    )
-  }
+        )
+      }
       
-  renderResponse = () =>{
-    return <DataTable response={this.state.response} />
-  }
-}
+      renderResponse = () =>{
+        return <DataTable response={this.state.response} />
+      }
+    }
