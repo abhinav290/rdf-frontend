@@ -1,9 +1,9 @@
 import React from 'react'
 import {Paper, Typography} from '@material-ui/core'
-import MaterialTable from 'material-table'
 import {inject, Observer} from 'mobx-react'
-import {process_json, process_json_data} from '../../utils'
 import _ from 'lodash'
+import DataTable from '../base/table'
+
 @inject('queryModel')
 @Observer
 export default class Output extends React.Component {
@@ -71,16 +71,6 @@ export default class Output extends React.Component {
     
     renderResponse = () =>{
       const {response} = this.state
-      const columns = process_json(response)
-      const data = process_json_data(response)      
-      
-      return(
-        <MaterialTable
-        columns={columns}
-        data={data}
-        title="Results"
-        options={{headerStyle: {backgroundColor: '#039be5'}}}
-        />
-        )
+      return <DataTable response={response} />
       }
     }

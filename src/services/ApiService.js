@@ -31,27 +31,13 @@ class ApiSerice {
       return headers
   }
 
-  async sample_output() { //Sample output
-    const res = await this.apiCall(api.sample, 'GET')
-    return res.body
-  }
-  async executeQuery(params) { //Sample output
+  async executeQuery(params) {
+    console.log('Executing query :- '+ JSON.stringify(params))
     const res = await this.apiCall(api.execute, 'POST', params)
     const ok =res.ok
     const data= res.body
     return {ok, data}
   }
-
-  async edit_user(id = 0, token = false, params) { //edit user by id/params
-      const res = await this.apiCall(
-          `${api.user}/${id}/`,
-          'PUT',
-          token,
-          params
-      )
-      return res
-  }
-
 }
 
 export default new ApiSerice()

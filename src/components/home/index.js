@@ -2,8 +2,10 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles';
 import { observer, inject } from 'mobx-react'
 import Output from './../Output'
+import OutputList from './../QUERY_LIST'
 import EditableQueryComponent from './../EditableQueryComponent'
 import {QUERIES, } from './../../consts'
+import _ from 'lodash'
 
 const useStyles = (theme) => ({
   menuButton: {
@@ -33,56 +35,32 @@ const useStyles = (theme) => ({
 @inject('queryModel')
 @observer
 class Home extends React.Component {
-  
-  
+
   state = {
     indexSelected: 0,
   }
-  
+
+  componentWillMount = () => {
+    this.props.queryModel.getDataStore()
+  }
+
   handleItemClick = async (index) => {
     this.setState({indexSelected: index})
   }
-  
+
   render_list_items = () => {
     return(
       Object.keys(QUERIES).map((key, index) => (
-        <li id={`nav-item-${index}`} class={this.state.indexSelected === index && "active"} onClick={() => this.handleItemClick(index)}>
+        <li id={`nav-item-${index}`} key={index} class={this.state.indexSelected === index && "active"} onClick={() => this.handleItemClick(index)}>
         <a>
-        <i class={QUERIES[key].icon}></i>
+        <i className={QUERIES[key].icon}></i>
         <p>{QUERIES[key].displayTitle}</p>
         </a>
         </li>
         )))
-      } 
+  }
       
-      render = () => {
-        return (<div>
-          <div class="sidebar" data-color="purple" data-image="assets/img/sidebar-5.jpg">
-          <div class="sidebar-wrapper">
-          <div class="logo">
-          <a class="simple-text">
-            Tourism Query
-          </a>
-          </div>    
-          <ul class="nav">
-          {this.render_list_items()}
-          </ul>
-          </div>
-          </div>
-          <div class="main-panel">
-          {this.renderNavBar()}
-          <div class="content" style={{paddingBottom:'10%'}}>
-          <div class="container-fluid">
-          {this.state.indexSelected === 0 && <EditableQueryComponent index={this.state.indexSelected}/>}
-          {this.state.indexSelected !==0 && <Output index={this.state.indexSelected} {...QUERIES[this.state.indexSelected]}/>}
-          </div>
-          </div>
-          {this.renderFooter()}
-          </div>
-          </div>
-          )    
-        }
-        renderNavBar = () => {
+  renderNavBar = () => {
           return(
             <nav class="navbar navbar-default navbar-fixed">
             <div class="container-fluid">
@@ -124,7 +102,8 @@ class Home extends React.Component {
             </nav>
             )
           }
-          renderFooter = () => {
+
+  renderFooter = () => {
             return(
               <footer class="footer" style={{zIndex: 2003, position:'fixed',width:'inherit', bottom: 0,opacity: '1'}}>
               <div class="container-fluid">
@@ -135,5 +114,43 @@ class Home extends React.Component {
           </footer>
             )
           }
+
+          renderMainComponent =() => {
+            const index= this.state.indexSelected
+            if(index === 0) return <EditableQueryComponent index={index}/>
+            if (_.isEmpty(QUERIES[index].dataKey)) return <Output index={index} {...QUERIES[index]}/>
+            return <OutputList index={index} {...QUERIES[index]}/>
+  
+          }
+
+          render = () => {
+            return (<div>
+              <div className="sidebar" data-color="purple" data-image="assets/img/sidebar-5.jpg">
+              <div className="sidebar-wrapper">
+              <div className="logo">
+              <a className="simple-text">
+                Tourism Query
+              </a>
+              </div>    
+              <ul className="nav">
+              {this.render_list_items()}
+              </ul>
+              </div>
+              </div>
+              <div className="main-panel">
+              {this.renderNavBar()}
+              <div className="content" style={{paddingBottom:'10%'}}>
+              <div className="container-fluid">
+                {this.renderMainComponent()}
+              </div>
+              </div>
+              {this.renderFooter()}
+              </div>
+              </div>
+              )    
+            }
+    
+    
         }
+        
         export default withStyles(useStyles)(Home);

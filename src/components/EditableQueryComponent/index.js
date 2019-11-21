@@ -1,16 +1,18 @@
 import React from 'react'
 import { Grid, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper, Button } from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
-import MaterialTable from 'material-table'
 import { inject, Observer } from 'mobx-react'
-import {process_json, process_json_data} from '../../utils'
 import _ from 'lodash'
+import DataTable from '../base/table'
 
 const styles = (theme) => ({
   button: {
     margin: theme.spacing(1),
     marginRight: '80%',
-    float: 'right'
+    float: 'right',
+    color: "#fff",
+    fontSize: "1.47rem",
+    backgroundColor: "#9570d5"
   },
   textarea: {
     width: '90%',
@@ -61,11 +63,9 @@ class EditableQueryComponent extends React.Component {
       response: null
     })
     this.executeQuery()
-    console.log('Clicked' + this.state.query)
   }
   
   handleQueryChange = (e) => {
-    console.log()
     this.setState({query : e.target.value })
   }
   
@@ -81,7 +81,7 @@ class EditableQueryComponent extends React.Component {
       </Grid>
       
       <Grid item>
-      <Button variant="contained" color="primary" className={classes.button} disabled={this.state.buttonDisabled} onClick={this.handleOnClick}>
+      <Button variant="contained" className={classes.button} disabled={this.state.buttonDisabled} onClick={this.handleOnClick}>
       Execute
       </Button>
       </Grid>
@@ -101,16 +101,7 @@ class EditableQueryComponent extends React.Component {
     
     renderResponse = () =>{
       const {response} = this.state
-      const columns = process_json(response)
-      const data = process_json_data(response)
-      return(
-        <MaterialTable
-        columns={columns}
-        data={data}
-        title="Results"
-        options={{headerStyle: {backgroundColor: '#039be5',}}}
-        />
-        )
+      return <DataTable response={response} />
       }
       
       renderAlert = () => {
