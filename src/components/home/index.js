@@ -88,7 +88,7 @@ class Home extends React.Component {
             <ul class="dropdown-menu">
             <li><a >Team Members</a></li>
             <li class="divider"></li>
-            <li><a >Abhinav Gandhi</a></li>
+            <li><a >Abhinav</a></li>
             <li><a >Mayur</a></li>
             <li><a >Rushikesh</a></li>
             <li><a >Mrinal</a></li>
@@ -108,7 +108,7 @@ class Home extends React.Component {
               <footer class="footer" style={{zIndex: 2003, position:'fixed',width:'inherit', bottom: 0,opacity: '1'}}>
               <div class="container-fluid">
                   <p class="copyright pull-right">
-                      &copy; <script>document.write(new Date().getFullYear())</script> Group , made with love for semantic web
+                      &copy; <script>document.write(new Date().getFullYear())</script> Group B, made with love for semantic web
                   </p>
               </div>
           </footer>

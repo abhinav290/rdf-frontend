@@ -1,7 +1,7 @@
 export const API_URL="https://opendata-backend.herokuapp.com"
 export const PROJECT_NAME="Tourism Open Data"
 export const KEYS= {
-    CITY: "City",
+    COUNTY: "County",
     COUNTRY: "Country",
     ACTIVITY: "Activity",
     ATTRACTION: "Attraction",
@@ -13,10 +13,10 @@ export const PREFIXES = {
     TOURISM: '<http://www.example.org/tourism/>'
 }
 export const QUERY_MAP = {
-    "City":`PREFIX tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?id a ?obj . ?value tourism:countyName ?name. FILTER (?obj = tourism:County)}`,
+    "County":`PREFIX tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?id a ?obj . ?value tourism:countyName ?name. FILTER (?obj = tourism:County)}`,
     "Country":`PREFIX tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?id a ?obj . ?value tourism:countryName ?name. FILTER (?obj = tourism:Country)}`,
     "Activity":`PREFIX tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?value a ?obj . ?value tourism:name ?placeName. FILTER (?obj = tourism:ActivityPlace)}`,
-    "Attraction": `PREFIX tourism: tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?value a ?obj . ?value tourism:placeName ?name. FILTER (?obj = tourism:Attraction)}`,
+    "Attraction": `PREFIX tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?value a ?obj . ?value tourism:placeName ?name. FILTER (?obj = tourism:Attraction)}`,
     "Accommodation": `PREFIX tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?value a ?obj . ?value tourism:placeName ?name. FILTER (?obj = tourism:Accommodation)}`,
     "Trail":`PREFIX tourism: ${PREFIXES.TOURISM} SELECT DISTINCT ?value ?name WHERE {?value a ?obj . ?value tourism:trailName ?name. FILTER (?obj = tourism:Trail)}`,
 }
@@ -54,23 +54,78 @@ export const QUERIES = {
         icon:"pe-7s-news-paper",
         question: "Display all instances of all classes.",
         displayTitle: "Query 2",
-        query: (value) => {return `PREFIX tourism:${PREFIXES.TOURISM} select ?x ?y where {?x a ?y. FILTER(?x = <${value}>)}`},
-        dataKey:KEYS.COUNTRY,
-        placeholder: 'Please select the country.'
+        query: (value) => {return `PREFIX tourism:${PREFIXES.TOURISM}
+            SELECT ?name  ?telephone ?url
+            WHERE {
+                    ?attraction a tourism:Attraction ;
+                    tourism:placeAddress ?AddressAttraction.
+                    ?AddressAttraction tourism:county ?region.
+         
+          ?accommodation a tourism:Accommodation ;
+                  tourism:placeName ?name ;
+                  tourism:placeAddress ?AddressAccommodation .
+          ?AddressAccommodation tourism:county ?regionAccommodation .
+         
+          OPTIONAL { ?accommodation tourism:url ?url } .
+          OPTIONAL { ?accommodation tourism:placeTelephone ?telephone } .
+         
+          FILTER(sameTerm(?attraction, <${value}>))
+          FILTER ( sameTerm(?region,?regionAccommodation) ) .
+         }
+        ORDER BY ?name
+        `},
+        dataKey:KEYS.ATTRACTION,
+        placeholder: 'Please select the Attraction.'
     },
     3: {
         icon:"pe-7s-news-paper",
         question: "Display all instances of all classes.",
         displayTitle: "Query 3",
-        query: (value) => {return `PREFIX tourism:${PREFIXES.TOURISM} select ?x ?y where {?x a ?y. FILTER(?x = <${value}>)}`},
-        dataKey:KEYS.ACCOMMODATION,
-        placeholder: 'Please select the accomodation.'
+        query: `PREFIX tourism: ${PREFIXES.TOURISM}
+        SELECT ?AccommodationName ?AccomodationLatitude ?AccomodationLongitude ?ActivityName  ?Contact_No
+        WHERE {
+          ?accommodation a tourism:Accommodation ;
+                  tourism:placeName ?AccommodationName ;
+                  tourism:placeAddress ?AddressAccommodation .
+          ?AddressAccommodation tourism:location ?geoLocAccommodation .
+          ?geoLocAccommodation tourism:latitude ?AccomodationLatitude ;
+                                tourism:longitude ?AccomodationLongitude .
+          
+          ?ActivityPlace a tourism:ActivityPlace;
+                        tourism:placeName  ?ActivityName;
+                        tourism:placeAddress ?ActivityAddress.
+          ?ActivityAddress tourism:location ?geoLocActivity .
+          ?geoLocActivity tourism:latitude ?ActivityLatitude ;
+                           tourism:longitude ?ActivityLongitude .
+          OPTIONAL { ?ActivityPlace tourism:placeTelephone        ?Contact_No; } .
+        
+          FILTER ( sameTerm(?ActivityLongitude,?AccomodationLongitude) &&  sameTerm(?AccomodationLatitude,?ActivityLatitude) ) .
+         }
+        ORDER BY ?AccommodationName`
     },
     4: {
         icon:"pe-7s-news-paper",
         question: "Display all instances of all classes.",
         displayTitle: "Query 4",
-        query: "select ?x ?y where {?x a ?y.}",
+        query: `PREFIX tourism: ${PREFIXES.TOURISM}
+        SELECT ?AccommodationName ?Accommodation_Phone ?ActivityName 
+        WHERE {
+          ?accommodation a tourism:Accommodation ;
+                  tourism:placeName ?AccommodationName ;
+                  tourism:accommodationType "BedAndBreakfast";
+                  tourism:placeTelephone ?Accommodation_Phone;
+                  tourism:placeAddress ?AddressAccommodation .
+          ?AddressAccommodation tourism:county ?AccommodationCounty .
+
+          ?ActivityPlace a tourism:ActivityPlace;
+                        tourism:placeName  ?ActivityName;
+                          tourism:placeAddress ?AddressActivity .
+          ?AddressActivity tourism:county ?ActivityCounty .
+          
+          FILTER(sameTerm(?ActivityCounty,?AccommodationCounty))
+          FILTER regex(?ActivityName, "Bar" , 'i')  
+         }
+        limit 5`
     },
     5: {
         icon:"pe-7s-news-paper",

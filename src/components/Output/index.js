@@ -38,7 +38,7 @@ export default class Output extends React.Component {
   render = () => {
     return(
       <div>
-      <Typography variant="h4" style={{marginLeft:"2%"}}>
+      <Typography variant="h4" style={{ textAlign:"center", marginLeft:"2%"}}>
       {this.props.question}
       </Typography>
       <br/>

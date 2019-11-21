@@ -52,7 +52,7 @@ export default class Output extends React.Component {
     const options = this.props.queryModel.dataStore[this.props.dataKey]
     return(
       <div>
-      <Typography variant="h4" style={{marginLeft:"2%"}}>
+      <Typography variant="h4" style={{ textAlign:"center", marginLeft:"2%"}}>
       {this.props.question}
       </Typography>
       <br/>
