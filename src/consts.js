@@ -263,9 +263,23 @@ export const QUERIES = {
     },    
     9: {
         icon:"pe-7s-news-paper",
-        question: "Display all instances of all classes.",
+        question: "Accommodation and Activities having the same phone number, implying accommodations with activities.",
         displayTitle: "Query 9",
-        query: "select ?x ?y where {?x a ?y.}",
+        query: `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX tourism: <http://www.example.org/tourism/>
+        SELECT ?AccommodationName ?Accommodation_Phone ?ActivityName
+        WHERE {
+        ?accommodation a tourism:Accommodation ;
+        tourism:placeName ?AccommodationName ;
+        tourism:placeTelephone ?Accommodation_Phone.
+        
+        ?ActivityPlace a tourism:ActivityPlace;
+        
+        tourism:placeName ?ActivityName;
+        tourism:placeTelephone ?Activity_Phone .
+        FILTER(sameTerm(?Activity_Phone,?Accommodation_Phone))
+        }`,
     },
     10: {
         icon:"pe-7s-news-paper",
