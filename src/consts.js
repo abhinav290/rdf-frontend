@@ -91,7 +91,7 @@ export const QUERIES = {
     },
     3: {
         icon:"pe-7s-news-paper",
-        question: "List accommodation of type 'LodgingBusiness' which are near the starting point for trails with climb is greater than 500m",
+        question: "List accommodation of type 'LodgingBusiness' which are near the starting point for trails with climb is greater than 500m.",
         displayTitle: "Query 3",
         query: `PREFIX math:<http://www.w3.org/2005/xpath-functions/math#>
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -224,7 +224,7 @@ export const QUERIES = {
     },    
     8: {
         icon:"pe-7s-news-paper",
-        question: "Number of circular trails within 2.5km for an accommodation in a selected county.",
+        question: "Show count of the number of circular trails within the radius of 2.5km in a selected county for different accommodations.",
         displayTitle: "Query 8",
         query: (value) => {return `PREFIX tourism: ${PREFIXES.TOURISM}
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -269,7 +269,7 @@ export const QUERIES = {
     },
     10: {
         icon:"pe-7s-news-paper",
-        question: "List number of Activities which are in the same county as an “Easy” Trail.",
+        question: "List number of Activities which are in the same county as an 'Easy' Trail.",
         displayTitle: "Query 10",
         query: `PREFIX tourism: ${PREFIXES.TOURISM}
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
