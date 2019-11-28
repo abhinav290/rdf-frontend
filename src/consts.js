@@ -30,7 +30,7 @@ export const QUERIES = {
     },
     1: {
         icon:"pe-7s-news-paper",
-        question: "List top 5 accommodations within 1km of a trail's starting point for the selected county.",
+        question: "List 5 accommodations within 1km of a trail's starting point for the selected county.",
         displayTitle: "Query 1",
         query: (value) => {return `PREFIX math:<http://www.w3.org/2005/xpath-functions/math#>
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
